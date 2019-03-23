@@ -1,3 +1,20 @@
+/* Unfamiliar concepts
+ * 1. The global wrapper jQuery(function ($) {...});
+ * 2. $el variable $el = $(el)
+ *
+ * Useful links
+ * The todomvc spec https://github.com/tastejs/todomvc/blob/master/app-spec.md
+ *
+ *
+ * Process to strip out jQuery
+ * For each jQuery call (identified by $() and chained methods)
+ *   Figure out what the call is returning
+ *   Replace with regular dom methods that return the same thing
+ * Finally, figure out how to replace jQuery wrapper with a different wrapper
+ *
+ */
+
+
 /*global jQuery, Handlebars, Router */
 jQuery(function ($) {
 	'use strict';
