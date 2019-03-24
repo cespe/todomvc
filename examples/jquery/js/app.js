@@ -58,8 +58,11 @@ jQuery(function ($) {
 	var App = {
 		init: function () {
 			this.todos = util.store('todos-jquery');
-			this.todoTemplate = Handlebars.compile($('#todo-template').html());
-			this.footerTemplate = Handlebars.compile($('#footer-template').html());
+			// replace  Handlebars.compile($('#todo-template').html())
+			// jQuery.html() uses innerHTML
+			this.todoTemplate = Handlebars.compile(document.getElementById('todo-template').innerHTML);
+			// replace  Handlebars.compile($('#footer-template').html())
+			this.footerTemplate = Handlebars.compile(document.getElementById('footer-template').innerHTML);
 			this.bindEvents();
 
 			new Router({
