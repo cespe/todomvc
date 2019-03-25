@@ -75,7 +75,8 @@ jQuery(function ($) {
 		bindEvents: function () {
 			//$('#new-todo').on('keyup', this.create.bind(this));
 			document.getElementById('new-todo').addEventListener('keyup', this.create.bind(this));
-			$('#toggle-all').on('change', this.toggleAll.bind(this));
+			//$('#toggle-all').on('change', this.toggleAll.bind(this));
+			document.getElementById('toggle-all').addEventListener('change', this.toggleAll.bind(this));
 			$('#footer').on('click', '#clear-completed', this.destroyCompleted.bind(this));
 			$('#todo-list')
 				.on('change', '.toggle', this.toggle.bind(this))
@@ -106,7 +107,8 @@ jQuery(function ($) {
 			$('#footer').toggle(todoCount > 0).html(template);
 		},
 		toggleAll: function (e) {
-			var isChecked = $(e.target).prop('checked');
+			//var isChecked = $(e.target).prop('checked');
+			var isChecked = e.target.checked;
 
 			this.todos.forEach(function (todo) {
 				todo.completed = isChecked;
