@@ -73,7 +73,8 @@ jQuery(function ($) {
 			}).init('/all');
 		},
 		bindEvents: function () {
-			$('#new-todo').on('keyup', this.create.bind(this));
+			//$('#new-todo').on('keyup', this.create.bind(this));
+			document.getElementById('new-todo').addEventListener('keyup', this.create.bind(this));
 			$('#toggle-all').on('change', this.toggleAll.bind(this));
 			$('#footer').on('click', '#clear-completed', this.destroyCompleted.bind(this));
 			$('#todo-list')
@@ -153,8 +154,8 @@ jQuery(function ($) {
 			}
 		},
 		create: function (e) {
-			var $input = $(e.target);
-			var val = $input.val().trim();
+			var $input = e.target;
+			var val = $input.value.trim();
 
 			if (e.which !== ENTER_KEY || !val) {
 				return;
@@ -166,7 +167,7 @@ jQuery(function ($) {
 				completed: false
 			});
 
-			$input.val('');
+			$input.value = '';
 
 			this.render();
 		},
