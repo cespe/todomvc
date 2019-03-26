@@ -139,20 +139,14 @@ jQuery(function ($) {
 
 			return this.todos;
 		},
-//		destroyCompleted: function () {
-//			this.todos = this.getActiveTodos();
-//			this.filter = 'all';
-//			this.render();
-//		},
 		destroyCompleted: function (e) {
+			// without jQuery, must test for correct target
 			if (e.target.id === 'clear-completed') {
 				this.todos = this.getActiveTodos();
 				this.filter = 'All';
 				this.render();
 			}
 		},
-
-
 		// accepts an element from inside the `.item` div and
 		// returns the corresponding index in the `todos` array
 		indexFromEl: function (el) {
@@ -185,7 +179,8 @@ jQuery(function ($) {
 			this.render();
 		},
 		toggle: function (e) {
-				if (e.target.classList.contains('toggle')) {
+			// without jQuery, must test for correct target
+			if (e.target.classList.contains('toggle')) {
 				var i = this.indexFromEl(e.target);
 				this.todos[i].completed = !this.todos[i].completed;
 				this.render();
