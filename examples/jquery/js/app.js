@@ -77,7 +77,8 @@ jQuery(function ($) {
 			document.getElementById('new-todo').addEventListener('keyup', this.create.bind(this));
 			//$('#toggle-all').on('change', this.toggleAll.bind(this));
 			document.getElementById('toggle-all').addEventListener('change', this.toggleAll.bind(this));
-			$('#footer').on('click', '#clear-completed', this.destroyCompleted.bind(this));
+			//$('#footer').on('click', '#clear-completed', this.destroyCompleted.bind(this));
+			document.getElementById('footer').addEventListener('click', this.destroyCompleted.bind(this));
 			$('#todo-list')
 				.on('change', '.toggle', this.toggle.bind(this))
 				.on('dblclick', 'label', this.edit.bind(this))
@@ -137,11 +138,20 @@ jQuery(function ($) {
 
 			return this.todos;
 		},
-		destroyCompleted: function () {
-			this.todos = this.getActiveTodos();
-			this.filter = 'all';
-			this.render();
+//		destroyCompleted: function () {
+//			this.todos = this.getActiveTodos();
+//			this.filter = 'all';
+//			this.render();
+//		},
+		destroyCompleted: function (e) {
+			if (e.target.id === 'clear-completed') {
+				this.todos = this.getActiveTodos();
+				this.filter = 'All';
+				this.render();
+			}
 		},
+
+
 		// accepts an element from inside the `.item` div and
 		// returns the corresponding index in the `todos` array
 		indexFromEl: function (el) {
