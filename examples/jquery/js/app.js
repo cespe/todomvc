@@ -79,8 +79,9 @@ jQuery(function ($) {
 			document.getElementById('toggle-all').addEventListener('change', this.toggleAll.bind(this));
 			//$('#footer').on('click', '#clear-completed', this.destroyCompleted.bind(this));
 			document.getElementById('footer').addEventListener('click', this.destroyCompleted.bind(this));
+			document.getElementById('todo-list').addEventListener('change', this.toggle.bind(this));
 			$('#todo-list')
-				.on('change', '.toggle', this.toggle.bind(this))
+				//.on('change', '.toggle', this.toggle.bind(this))
 				.on('dblclick', 'label', this.edit.bind(this))
 				.on('keyup', '.edit', this.editKeyup.bind(this))
 				.on('focusout', '.edit', this.update.bind(this))
@@ -184,9 +185,11 @@ jQuery(function ($) {
 			this.render();
 		},
 		toggle: function (e) {
-			var i = this.indexFromEl(e.target);
-			this.todos[i].completed = !this.todos[i].completed;
-			this.render();
+				if (e.target.classList.contains('toggle')) {
+				var i = this.indexFromEl(e.target);
+				this.todos[i].completed = !this.todos[i].completed;
+				this.render();
+			}
 		},
 		edit: function (e) {
 			var $input = $(e.target).closest('li').addClass('editing').find('.edit');
