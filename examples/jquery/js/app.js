@@ -79,10 +79,11 @@ jQuery(function ($) {
 			document.getElementById('toggle-all').addEventListener('change', this.toggleAll.bind(this));
 			//$('#footer').on('click', '#clear-completed', this.destroyCompleted.bind(this));
 			document.getElementById('footer').addEventListener('click', this.destroyCompleted.bind(this));
-			document.getElementById('todo-list').addEventListener('change', this.toggle.bind(this));
+			document.getElementById('todo-list').addEventListener('change', this.toggle.bind(this)) // target .toggle
+			document.getElementById('todo-list').addEventListener('dblclick', this.edit.bind(this)); // target label
 			$('#todo-list')
 				//.on('change', '.toggle', this.toggle.bind(this))
-				.on('dblclick', 'label', this.edit.bind(this))
+				//.on('dblclick', 'label', this.edit.bind(this))
 				.on('keyup', '.edit', this.editKeyup.bind(this))
 				.on('focusout', '.edit', this.update.bind(this))
 				.on('click', '.destroy', this.destroy.bind(this));
@@ -179,7 +180,7 @@ jQuery(function ($) {
 			this.render();
 		},
 		toggle: function (e) {
-			// without jQuery, must test for correct target
+			// without jQuery, must test for correct target, 'toggle' class in this case
 			if (e.target.classList.contains('toggle')) {
 				var i = this.indexFromEl(e.target);
 				this.todos[i].completed = !this.todos[i].completed;
@@ -187,8 +188,15 @@ jQuery(function ($) {
 			}
 		},
 		edit: function (e) {
-			var $input = $(e.target).closest('li').addClass('editing').find('.edit');
-			$input.val($input.val()).focus();
+			// without jQuery, must test for correct target, 'label' element in this case
+			if (e.target.nodeName === 'LABEL') {
+				var targetLi = e.target.closest('li');
+				targetLi.classList.add('editing');
+//				var $input = e.target.closest('li').classList.add('editing').find('.edit');
+				var $input = targetLi.querySelector('.edit');
+//				$input.val($input.val()).focus(); // this confusing construct has to do with moving cursor to end
+				$input.focus();		// sets cursor at beginning
+			}
 		},
 		editKeyup: function (e) {
 			if (e.which === ENTER_KEY) {
