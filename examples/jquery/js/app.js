@@ -87,11 +87,12 @@ jQuery(function ($) {
 			document.getElementById('todo-list').addEventListener('dblclick', this.edit.bind(this)); // target label
 			document.getElementById('todo-list').addEventListener('keyup', this.editKeyup.bind(this)); // target .edit
 			document.getElementById('todo-list').addEventListener('click', this.destroy.bind(this)); // target .destroy
-			$('#todo-list')
+			document.getElementById('todo-list').addEventListener('focusout', this.update.bind(this)); // target .edit
+			//$('#todo-list')
 				//.on('change', '.toggle', this.toggle.bind(this))
 				//.on('dblclick', 'label', this.edit.bind(this))
 				//.on('keyup', '.edit', this.editKeyup.bind(this))
-				.on('focusout', '.edit', this.update.bind(this))
+				//.on('focusout', '.edit', this.update.bind(this))
 				//.on('click', '.destroy', this.destroy.bind(this));
 		},
 		render: function () {
@@ -217,19 +218,22 @@ jQuery(function ($) {
 			}
 		},
 		update: function (e) {
-			var el = e.target;
-			var $el = $(el);
-			var val = $el.val().trim();
+			// without jQuery, must test for correct target, 'edit' class in this case
+			if (e.target.classList.contains('edit')) {
+				var el = e.target;
+				var $el = $(el);
+				var val = $el.val().trim();
 
-			if (!val) {
-				this.destroy(e);
-				return;
-			}
+				if (!val) {
+					this.destroy(e);
+					return;
+				}
 
-			if ($el.data('abort')) {
-				$el.data('abort', false);
-			} else {
-				this.todos[this.indexFromEl(el)].title = val;
+				if ($el.data('abort')) {
+					$el.data('abort', false);
+				} else {
+					this.todos[this.indexFromEl(el)].title = val;
+				}
 			}
 
 			this.render();
