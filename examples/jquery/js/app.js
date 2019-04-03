@@ -11,6 +11,10 @@
  *   Figure out what the call is returning
  *   Replace with regular dom methods that return the same thing
  * Finally, figure out how to replace jQuery wrapper with a different wrapper
+ 
+ * Bugs found along the way
+ *   Cursor doesn't go to end of entry when editing a todo
+ *   Escape key doesn't clear the input for a new entry (bug in original too)
  *
  */
 
@@ -81,10 +85,11 @@ jQuery(function ($) {
 			document.getElementById('footer').addEventListener('click', this.destroyCompleted.bind(this));
 			document.getElementById('todo-list').addEventListener('change', this.toggle.bind(this)) // target .toggle
 			document.getElementById('todo-list').addEventListener('dblclick', this.edit.bind(this)); // target label
+			document.getElementById('todo-list').addEventListener('keyup', this.editKeyup.bind(this)); // target .edit
 			$('#todo-list')
 				//.on('change', '.toggle', this.toggle.bind(this))
 				//.on('dblclick', 'label', this.edit.bind(this))
-				.on('keyup', '.edit', this.editKeyup.bind(this))
+				//.on('keyup', '.edit', this.editKeyup.bind(this))
 				.on('focusout', '.edit', this.update.bind(this))
 				.on('click', '.destroy', this.destroy.bind(this));
 		},
@@ -199,12 +204,15 @@ jQuery(function ($) {
 			}
 		},
 		editKeyup: function (e) {
-			if (e.which === ENTER_KEY) {
-				e.target.blur();
-			}
+			// without jQuery, must test for correct target, 'edit' class in this case
+			if (e.target.classList.contains('edit')) {
+				if (e.which === ENTER_KEY) {
+					e.target.blur();
+				}
 
-			if (e.which === ESCAPE_KEY) {
-				$(e.target).data('abort', true).blur();
+				if (e.which === ESCAPE_KEY) {
+					$(e.target).data('abort', true).blur();
+				}
 			}
 		},
 		update: function (e) {
