@@ -86,12 +86,13 @@ jQuery(function ($) {
 			document.getElementById('todo-list').addEventListener('change', this.toggle.bind(this)) // target .toggle
 			document.getElementById('todo-list').addEventListener('dblclick', this.edit.bind(this)); // target label
 			document.getElementById('todo-list').addEventListener('keyup', this.editKeyup.bind(this)); // target .edit
+			document.getElementById('todo-list').addEventListener('click', this.destroy.bind(this)); // target .destroy
 			$('#todo-list')
 				//.on('change', '.toggle', this.toggle.bind(this))
 				//.on('dblclick', 'label', this.edit.bind(this))
 				//.on('keyup', '.edit', this.editKeyup.bind(this))
 				.on('focusout', '.edit', this.update.bind(this))
-				.on('click', '.destroy', this.destroy.bind(this));
+				//.on('click', '.destroy', this.destroy.bind(this));
 		},
 		render: function () {
 			var todos = this.getFilteredTodos();
@@ -234,8 +235,11 @@ jQuery(function ($) {
 			this.render();
 		},
 		destroy: function (e) {
-			this.todos.splice(this.indexFromEl(e.target), 1);
-			this.render();
+			// without jQuery, must test for correct target, 'destroy' class in this case
+			if (e.target.classList.contains('destroy')) {
+				this.todos.splice(this.indexFromEl(e.target), 1);
+				this.render();
+			}
 		}
 	};
 
