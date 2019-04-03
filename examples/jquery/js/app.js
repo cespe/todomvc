@@ -114,7 +114,14 @@ jQuery(function ($) {
 				filter: this.filter
 			});
 
-			$('#footer').toggle(todoCount > 0).html(template);
+		//	$('#footer').toggle(todoCount > 0).html(template);
+			// jQuery toggle hides or shows by setting the display style inline
+			if ( todoCount > 0 ) {
+				document.getElementById('footer').innerHTML = template;
+				document.getElementById('footer').style.display = 'block';
+			} else {
+				document.getElementById('footer').style.display = 'none';
+			}
 		},
 		toggleAll: function (e) {
 			//var isChecked = $(e.target).prop('checked');
