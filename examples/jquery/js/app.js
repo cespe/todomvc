@@ -213,7 +213,9 @@ jQuery(function ($) {
 				}
 
 				if (e.which === ESCAPE_KEY) {
-					$(e.target).data('abort', true).blur();
+					//$(e.target).data('abort', true).blur();
+					e.target.setAttribute('data-abort', true);
+					e.target.blur();
 				}
 			}
 		},
@@ -221,16 +223,18 @@ jQuery(function ($) {
 			// without jQuery, must test for correct target, 'edit' class in this case
 			if (e.target.classList.contains('edit')) {
 				var el = e.target;
-				var $el = $(el);
-				var val = $el.val().trim();
+				// var $el = $(el);
+				var val = el.value.trim();
 
 				if (!val) {
 					this.destroy(e);
 					return;
 				}
 
-				if ($el.data('abort')) {
-					$el.data('abort', false);
+				// if ($el.data('abort')) {
+				// 	 $el.data('abort', false);
+				if (el.getAttribute('data-abort')) {	// could also use el.dataset.abort
+					el.setAttribute('data-abort', false);	// or el.dataset.abort = false
 				} else {
 					this.todos[this.indexFromEl(el)].title = val;
 				}
