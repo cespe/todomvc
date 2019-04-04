@@ -1,6 +1,9 @@
 /* Unfamiliar concepts
  * 1. The global wrapper jQuery(function ($) {...});
  * 2. $el variable $el = $(el)
+ * 		This turns out to be a convention to reinforce (I guess) that the variable holds a jQuery object
+ * 3. $input.val($input.val())
+ * 		Apparently voodoo to set the cursor at the end of the input entry
  *
  * Useful links
  * The todomvc spec https://github.com/tastejs/todomvc/blob/master/app-spec.md
@@ -8,14 +11,15 @@
  *
  * Process to strip out jQuery
  * For each jQuery call (identified by $() and chained methods)
- *   Figure out what the call is returning
- *   Replace with regular dom methods that return the same thing
+ *   Figure out what the call is returning or doing
+ *   Replace with regular dom methods that return or do the same thing
  * Finally, figure out how to replace jQuery wrapper with a different wrapper
  
  * Bugs found along the way
  *   Cursor doesn't go to end of entry when editing a todo
  *   Escape key doesn't clear the input for a new entry (bug in original too)
- *
+ *   Can't trigger debugger in App.edit if bindEvent is set to dblclick (can't in glitch original either)
+ *   	Solution uncheck 'Toggle device toolbar' in web inspector
  */
 
 
@@ -82,7 +86,8 @@ jQuery(function ($) {
 			//$('#toggle-all').on('change', this.toggleAll.bind(this));
 			document.getElementById('toggle-all').addEventListener('change', this.toggleAll.bind(this));
 			//$('#footer').on('click', '#clear-completed', this.destroyCompleted.bind(this));
-			document.getElementById('footer').addEventListener('click', this.destroyCompleted.bind(this));
+			document.getElementById('footer')
+					.addEventListener('click', this.destroyCompleted.bind(this)); // target #clear-completed
 			document.getElementById('todo-list').addEventListener('change', this.toggle.bind(this)) // target .toggle
 			document.getElementById('todo-list').addEventListener('dblclick', this.edit.bind(this)); // target label
 			document.getElementById('todo-list').addEventListener('keyup', this.editKeyup.bind(this)); // target .edit
@@ -204,11 +209,18 @@ jQuery(function ($) {
 		edit: function (e) {
 			// without jQuery, must test for correct target, 'label' element in this case
 			if (e.target.nodeName === 'LABEL') {
+				//var $input = e.target.closest('li').classList.add('editing').find('.edit');
 				var targetLi = e.target.closest('li');
 				targetLi.classList.add('editing');
-//				var $input = e.target.closest('li').classList.add('editing').find('.edit');
 				var $input = targetLi.querySelector('.edit');
-//				$input.val($input.val()).focus(); // this confusing construct has to do with moving cursor to end
+				
+				//$input.val($input.val()).focus();
+// 				this confusing construct has to do with moving cursor to end
+//				Gordon discusses this in vid 3 minute 31 and just removes it but his app was already setting the
+//				cursor at the beginning anyway.
+//				In the online version of jQuery todomvc, the code is revised to make it clear that the extra step
+//				is to put the cursor at the end of the line
+				
 				$input.focus();		// sets cursor at beginning
 			}
 		},
