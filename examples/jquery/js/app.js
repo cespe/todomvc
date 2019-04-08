@@ -4,6 +4,9 @@
  * 		This turns out to be a convention to reinforce (I guess) that the variable holds a jQuery object
  * 3. $input.val($input.val())
  * 		Apparently voodoo to set the cursor at the end of the input entry
+ * 4. Toggle-All checkbox behavior according to spec "toggles all the todos to the same state as itself"
+ * 		In practice, this appears to mean that when the checkbox is gray/false, it will make all the todos completed
+ * 		but when it is black/true, it will set all todos to active. It's weird to have an active control that is grayed out.
  *
  * Useful links
  * The todomvc spec https://github.com/tastejs/todomvc/blob/master/app-spec.md
@@ -17,9 +20,13 @@
  
  * Bugs found along the way
  *   Cursor doesn't go to end of entry when editing a todo
+ *   	Fixed in current versions at todomvc.com
  *   Escape key doesn't clear the input for a new entry (bug in original too)
  *   Can't trigger debugger in App.edit if bindEvent is set to dblclick (can't in glitch original either)
  *   	Solution uncheck 'Toggle device toolbar' in web inspector
+ *   Hitting return/enter when updating an entry leaves the destroy button active/visible in the line just updated,
+ *   even though the new-todo field gains focus. Bug in original and in current live versions too.
+ *
  */
 
 
@@ -102,11 +109,25 @@ jQuery(function ($) {
 		},
 		render: function () {
 			var todos = this.getFilteredTodos();
-			$('#todo-list').html(this.todoTemplate(todos));
-			$('#main').toggle(todos.length > 0);
-			$('#toggle-all').prop('checked', this.getActiveTodos().length === 0);
+			//$('#todo-list').html(this.todoTemplate(todos));
+			var tmpl = this.todoTemplate(todos);
+			document.getElementById('todo-list').innerHTML = tmpl;
+			//$('#main').toggle(todos.length > 0);
+			// jQuery toggle hides or shows by setting the display style inline
+			if (todos.length > 0) {
+				document.getElementById('main').style.display = 'block';
+			} else {
+				document.getElementById('main').style.display = 'none';
+			}
+			//$('#toggle-all').prop('checked', this.getActiveTodos().length === 0);
+			if (this.getActiveTodos().length === 0) {
+				document.getElementById('toggle-all').checked = true;
+			} else {
+				document.getElementById('toggle-all').checked = false;
+			}
 			this.renderFooter();
-			$('#new-todo').focus();
+			//$('#new-todo').focus();
+			document.getElementById('new-todo').focus();
 			util.store('todos-jquery', this.todos);
 		},
 		renderFooter: function () {
