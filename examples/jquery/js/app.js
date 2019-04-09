@@ -25,13 +25,14 @@
  *   Can't trigger debugger in App.edit if bindEvent is set to dblclick (can't in glitch original either)
  *   	Solution uncheck 'Toggle device toolbar' in web inspector
  *   Hitting return/enter when updating an entry leaves the destroy button active/visible in the line just updated,
- *   even though the new-todo field gains focus. Bug in original and in current live versions too.
+ *   even though the new-todo input gains focus. Bug in original and in current live versions too.
  *
  */
 
 
 /*global jQuery, Handlebars, Router */
 jQuery(function ($) {
+//( function () {
 	'use strict';
 
 	Handlebars.registerHelper('eq', function (a, b, options) {
@@ -191,7 +192,8 @@ jQuery(function ($) {
 		// accepts an element from inside the `.item` div and
 		// returns the corresponding index in the `todos` array
 		indexFromEl: function (el) {
-			var id = $(el).closest('li').data('id');
+			//var id = $(el).closest('li').data('id');
+			var id = el.closest('li').getAttribute('data-id');
 			var todos = this.todos;
 			var i = todos.length;
 
