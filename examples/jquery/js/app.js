@@ -31,8 +31,8 @@
 
 
 /*global jQuery, Handlebars, Router */
-jQuery(function ($) {
-//( function () {
+// jQuery(function ($) {
+( function () {
 	'use strict';
 
 	Handlebars.registerHelper('eq', function (a, b, options) {
@@ -294,4 +294,4 @@ jQuery(function ($) {
 	};
 
 	App.init();
-});
+})();
