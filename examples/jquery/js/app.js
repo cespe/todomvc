@@ -30,8 +30,7 @@
  */
 
 
-/*global jQuery, Handlebars, Router */
-// jQuery(function ($) {
+/*global Handlebars, Router */
 ( function () {
 	'use strict';
 
@@ -58,9 +57,6 @@
 
 			return uuid;
 		},
-		pluralize: function (count, word) {
-			return count === 1 ? word : word + 's';
-		},
 		store: function (namespace, data) {
 			if (arguments.length > 1) {
 				return localStorage.setItem(namespace, JSON.stringify(data));
@@ -74,10 +70,8 @@
 	var App = {
 		init: function () {
 			this.todos = util.store('todos-jquery');
-			// replace  Handlebars.compile($('#todo-template').html())
 			// jQuery.html() uses innerHTML
 			this.todoTemplate = Handlebars.compile(document.getElementById('todo-template').innerHTML);
-			// replace  Handlebars.compile($('#footer-template').html())
 			this.footerTemplate = Handlebars.compile(document.getElementById('footer-template').innerHTML);
 			this.bindEvents();
 
@@ -89,11 +83,8 @@
 			}).init('/all');
 		},
 		bindEvents: function () {
-			//$('#new-todo').on('keyup', this.create.bind(this));
 			document.getElementById('new-todo').addEventListener('keyup', this.create.bind(this));
-			//$('#toggle-all').on('change', this.toggleAll.bind(this));
 			document.getElementById('toggle-all').addEventListener('change', this.toggleAll.bind(this));
-			//$('#footer').on('click', '#clear-completed', this.destroyCompleted.bind(this));
 			document.getElementById('footer')
 					.addEventListener('click', this.destroyCompleted.bind(this)); // target #clear-completed
 			document.getElementById('todo-list').addEventListener('change', this.toggle.bind(this)) // target .toggle
@@ -101,33 +92,23 @@
 			document.getElementById('todo-list').addEventListener('keyup', this.editKeyup.bind(this)); // target .edit
 			document.getElementById('todo-list').addEventListener('click', this.destroy.bind(this)); // target .destroy
 			document.getElementById('todo-list').addEventListener('focusout', this.update.bind(this)); // target .edit
-			//$('#todo-list')
-				//.on('change', '.toggle', this.toggle.bind(this))
-				//.on('dblclick', 'label', this.edit.bind(this))
-				//.on('keyup', '.edit', this.editKeyup.bind(this))
-				//.on('focusout', '.edit', this.update.bind(this))
-				//.on('click', '.destroy', this.destroy.bind(this));
 		},
 		render: function () {
 			var todos = this.getFilteredTodos();
-			//$('#todo-list').html(this.todoTemplate(todos));
 			var tmpl = this.todoTemplate(todos);
 			document.getElementById('todo-list').innerHTML = tmpl;
-			//$('#main').toggle(todos.length > 0);
 			// jQuery toggle hides or shows by setting the display style inline
 			if (todos.length > 0) {
 				document.getElementById('main').style.display = 'block';
 			} else {
 				document.getElementById('main').style.display = 'none';
 			}
-			//$('#toggle-all').prop('checked', this.getActiveTodos().length === 0);
 			if (this.getActiveTodos().length === 0) {
 				document.getElementById('toggle-all').checked = true;
 			} else {
 				document.getElementById('toggle-all').checked = false;
 			}
 			this.renderFooter();
-			//$('#new-todo').focus();
 			document.getElementById('new-todo').focus();
 			util.store('todos-jquery', this.todos);
 		},
@@ -141,7 +122,6 @@
 				filter: this.filter
 			});
 
-		//	$('#footer').toggle(todoCount > 0).html(template);
 			// jQuery toggle hides or shows by setting the display style inline
 			if ( todoCount > 0 ) {
 				document.getElementById('footer').innerHTML = template;
@@ -151,7 +131,6 @@
 			}
 		},
 		toggleAll: function (e) {
-			//var isChecked = $(e.target).prop('checked');
 			var isChecked = e.target.checked;
 
 			this.todos.forEach(function (todo) {
@@ -192,7 +171,6 @@
 		// accepts an element from inside the `.item` div and
 		// returns the corresponding index in the `todos` array
 		indexFromEl: function (el) {
-			//var id = $(el).closest('li').data('id');
 			var id = el.closest('li').getAttribute('data-id');
 			var todos = this.todos;
 			var i = todos.length;
@@ -232,7 +210,6 @@
 		edit: function (e) {
 			// without jQuery, must test for correct target, 'label' element in this case
 			if (e.target.nodeName === 'LABEL') {
-				//var $input = e.target.closest('li').classList.add('editing').find('.edit');
 				var targetLi = e.target.closest('li');
 				targetLi.classList.add('editing');
 				var $input = targetLi.querySelector('.edit');
@@ -255,7 +232,6 @@
 				}
 
 				if (e.which === ESCAPE_KEY) {
-					//$(e.target).data('abort', true).blur();
 					e.target.setAttribute('data-abort', true);
 					e.target.blur();
 				}
@@ -273,8 +249,6 @@
 					return;
 				}
 
-				// if ($el.data('abort')) {
-				// 	 $el.data('abort', false);
 				if (el.getAttribute('data-abort')) {	// could also use el.dataset.abort
 					el.setAttribute('data-abort', false);	// or el.dataset.abort = false
 				} else {
