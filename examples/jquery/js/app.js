@@ -1,31 +1,16 @@
 /* Unfamiliar concepts
- * 1. The global wrapper jQuery(function ($) {...});
- * 2. $el variable $el = $(el)
- * 		This turns out to be a convention to reinforce (I guess) that the variable holds a jQuery object
- * 3. $input.val($input.val())
- * 		Apparently voodoo to set the cursor at the end of the input entry
- * 4. Toggle-All checkbox behavior according to spec "toggles all the todos to the same state as itself"
- * 		In practice, this appears to mean that when the checkbox is gray/false, it will make all the todos completed
- * 		but when it is black/true, it will set all todos to active. It's weird to have an active control that is grayed out.
  *
  * Useful links
- * The todomvc spec https://github.com/tastejs/todomvc/blob/master/app-spec.md
  *
- *
- * Process to strip out jQuery
- * For each jQuery call (identified by $() and chained methods)
- *   Figure out what the call is returning or doing
- *   Replace with regular dom methods that return or do the same thing
- * Finally, figure out how to replace jQuery wrapper with a different wrapper
+ * Implement undo
+ * Need to restore last state of todos array data
+ * Need to restore last state of todos filter
+ * Start with a small, useful undo for destroy()
+ * Keep the previous states of todos array in an 'undo' array
+ * On clicking 'undo' button, run function undo that
+ * 	
  
  * Bugs found along the way
- *   Cursor doesn't go to end of entry when editing a todo
- *   	Fixed in current versions at todomvc.com
- *   Escape key doesn't clear the input for a new entry (bug in original too)
- *   Can't trigger debugger in App.edit if bindEvent is set to dblclick (can't in glitch original either)
- *   	Solution uncheck 'Toggle device toolbar' in web inspector
- *   Hitting return/enter when updating an entry leaves the destroy button active/visible in the line just updated,
- *   even though the new-todo input gains focus. Bug in original and in current live versions too.
  *
  */
 
@@ -56,6 +41,9 @@
 			}
 
 			return uuid;
+		},
+		pluralize: function (count, word) {
+			return count === 1 ? word : word + 's';
 		},
 		store: function (namespace, data) {
 			if (arguments.length > 1) {
