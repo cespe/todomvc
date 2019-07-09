@@ -8,24 +8,19 @@ Your job is to rewrite the app to make render honest. That means there shouldn't
 Fork my version of TodoMVC and then post a link to your repository here: https://github.com/gordonmzhu/beasts/issues/6.
 
 
-From Practical Javascript todos version 9
-var view = {
-  displayTodos: function() {
-    var todosUl = document.querySelector('ul');
-    todosUl.innerHTML = '';
-    todoList.todos.forEach(function(todo, position) {
-      var todoLi = document.createElement('li');
-      var todoTextWithCompletion = '';
+The solution is to move the call to util.store out of render and into each function that changes todos. Conveniently, each of those functions also calls render, so it is a simple matter of finding each render call and adding a line to call util.store.
+```
+		// displayTodos from Practical Javascript only does one thing.
+		// I'm removing util.store so that render only does one thing.
+		// util.store can go in each function that calls render.
+		render: function () {
+			var todos = this.getFilteredTodos();
+			$('#todo-list').html(this.todoTemplate(todos));
+			$('#main').toggle(todos.length > 0);
+			$('#toggle-all').prop('checked', this.getActiveTodos().length === 0);
+			this.renderFooter();
+			$('#new-todo').focus();
+			//util.store('todos-jquery', this.todos);
+		},
+```
 
-      if (todo.completed === true) {
-        todoTextWithCompletion = '(x) ' + todo.todoText;
-      } else {
-        todoTextWithCompletion = '( ) ' + todo.todoText;
-      }
-      
-      todoLi.id = position;
-      todoLi.textContent = todoTextWithCompletion;
-      todoLi.appendChild(this.createDeleteButton());
-      todosUl.appendChild(todoLi);
-    }, this);
-  },
